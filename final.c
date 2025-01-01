@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   final.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mlabrirh <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/27 11:25:38 by mlabrirh          #+#    #+#             */
-/*   Updated: 2024/12/27 11:26:23 by mlabrirh         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "mlx.h"
 #include <stdlib.h>
@@ -24,11 +13,13 @@ typedef struct s_data {
     void    *img_collectible;
     void    *img_exit;
     void    *img_player;
+	void	*img_killer;
     int     player_x;
     int     player_y;
     char    **map;
     int     rows;
     int     cols;
+	int		collect;
 }   t_data;
 
 void    error_exit(const char *msg)
@@ -42,6 +33,25 @@ void	ft_putstr(char *msg)
 	write(1, msg, ft_strlen(msg));
 }
 
+void	count_collect(t_data *data)
+{
+	int i = 0;
+	data->collect = 0;
+	while(i < data->rows)
+	{
+		int j = 0;
+		while(j < data->cols)
+		{
+			if (data->map[i][j] == 'C')
+			{
+				data->collect++;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
 int	compare_firt_rows_with_other(char **map, int rows, int cols)
 {
 	int	i = 0;
@@ -49,10 +59,10 @@ int	compare_firt_rows_with_other(char **map, int rows, int cols)
 	while (i < rows)
 	{
 		if (ft_strlen(map[i]) != cols)
-			return 0;
+			return 1;
 		i++;
 	}
-	return 1;
+	return 0;
 }
 
 int is_wall_consistent(char **map, int rows, int cols)
@@ -104,11 +114,11 @@ int validate_map(char *map[], int rows, int cols)
         {
             if (map[i][j] == 'E')
                 exit_count++;
-			else if (map[i][j] == 'C')
+			if (map[i][j] == 'C')
                 collectible_count++;
-			else if (map[i][j] == 'P')
+			if (map[i][j] == 'P')
                 player_count++;
-			else if (map[i][j] == 'T')
+			if (map[i][j] == 'T')
 				killer++;
 
 			j++;
@@ -180,6 +190,7 @@ int	read_map(const char *file, t_data *data)
 void put_image(t_data *data, char tile, int x, int y)
 {
     void *img = NULL;
+	int i = data->player_x + data->player_y;
 
     if (tile == '0')
         img = data->img_empty;
@@ -191,9 +202,13 @@ void put_image(t_data *data, char tile, int x, int y)
         img = data->img_exit;
     else if (tile == 'P')
         img = data->img_player;
+    else if (tile == 'T')
+		img = data->img_killer;
 
     if (img)
         mlx_put_image_to_window(data->mlx, data->win, img, x * 32, y * 32);
+		mlx_string_put(data->mlx, data->win, 10, 10, 0xFFFFFF, "MOVE : %d");
+
 }
 
 void render_map(t_data *data)
@@ -233,6 +248,42 @@ void	move_player(t_data *data, int new_x, int new_y)
 	data->map[data->player_y][data->player_x] = 'P';
 }
 
+int is_valid_move(t_data *data, int x, int y)
+{
+    if (x < 0 || y < 0 || x >= data->cols || y >= data->rows)
+        return (0);
+    char tile = data->map[y][x];
+    return (tile == '0' || tile == 'C' || tile == 'E' || tile == 'T');
+}
+
+void process_interaction(t_data *data, int x, int y)
+{
+    char tile = data->map[y][x];
+	int	i = 0;
+    if (tile == 'C')
+    {
+        data->collect--;
+        data->map[y][x] = '0';  
+    }
+    else if (tile == 'E')
+    {
+        if (data->collect == 0)
+        {
+            move_player(data, x, y);
+            close_window(data); 
+        }
+        return;
+    }
+    else if (tile == 'T')
+    {
+        move_player(data, x, y);
+        close_window(data);
+    }
+
+    move_player(data, x, y);
+}
+
+
 int handle_keypress(int keycode, t_data *data)
 {
     int new_x = data->player_x;
@@ -249,15 +300,9 @@ int handle_keypress(int keycode, t_data *data)
     else if (keycode == 100)
         new_x++;
 
-    if (new_y >= 0 && new_y < data->rows && new_x >= 0 && new_x < data->cols &&
-        (data->map[new_y][new_x] == '0' || data->map[new_y][new_x] == 'C' || data->map[new_y][new_x] == 'E' || data->map[new_y][new_x] == 'T'))
+    if (is_valid_move(data, new_x, new_y))
     {
-		if (data->map[new_y][new_x] == 'E'|| data->map[new_y][new_x] == 'T')
-		{
-			if (data->map[new_y][new_x] != 'C')
-				close_window(data);
-		}
-		move_player(data, new_x, new_y);
+        process_interaction(data, new_x, new_y);
         mlx_clear_window(data->mlx, data->win);
         render_map(data);
     }
@@ -271,10 +316,10 @@ void flood_fill(t_data *data, char **map_copy, int x, int y)
     if (map_copy[x][y] == '1' || map_copy[x][y] == '.')
         return;
     map_copy[x][y] = '.';
-    flood_fill(data, map_copy, x + 1, y); // down
-    flood_fill(data, map_copy, x - 1, y); // up
-    flood_fill(data, map_copy, x, y + 1); // right
-    flood_fill(data, map_copy, x, y - 1); // left
+    flood_fill(data, map_copy, x + 1, y);
+    flood_fill(data, map_copy, x - 1, y);
+    flood_fill(data, map_copy, x, y + 1);
+    flood_fill(data, map_copy, x, y - 1);
 }
 
 void initialize_player_position(t_data *data)
@@ -339,7 +384,6 @@ int is_path_to_exit(t_data data, char **map)
 		e++;
 	}
     free(map_copy);
-
     return 1;
 }
 
@@ -350,7 +394,6 @@ int main(int argc, char **argv)
 		ft_putstr("<map_file>\n");
         return (EXIT_FAILURE);
     }
-
     t_data data = {0};
 
     if (!read_map(argv[1], &data))
@@ -358,22 +401,24 @@ int main(int argc, char **argv)
     initialize_player_position(&data);
 	if (!is_wall_consistent(data.map, data.rows, data.cols))
 		exit(0);
+	if (!compare_firt_rows_with_other(data.map, data.rows, data.cols))
+		exit(0);
 	if (!is_path_to_exit(data, data.map))
 		exit(0);
     data.mlx = mlx_init();
     if (!data.mlx)
         error_exit("Failed to initialize MLX");
-
     data.win = mlx_new_window(data.mlx, data.cols * 32, data.rows * 32, "Simple Map");
     if (!data.win)
         error_exit("Failed to create window");
+	count_collect(&data);
     int width, height;
     data.img_empty = mlx_xpm_file_to_image(data.mlx, "/home/mlabrirh/Downloads/Grass.xpm", &width, &height);
     data.img_wall = mlx_xpm_file_to_image(data.mlx, "/home/mlabrirh/Downloads/Window-2.xpm", &width, &height);
-    data.img_collectible = mlx_xpm_file_to_image(data.mlx, "/home/mlabrirh/Desktop/sprites/Ghosts/B/ghost_down1.xpm", &width, &height);
+    data.img_collectible = mlx_xpm_file_to_image(data.mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_semi_right.xpm", &width, &height);
     data.img_exit = mlx_xpm_file_to_image(data.mlx, "/home/mlabrirh/Desktop/sprites/Other/Portal/portal.xpm", &width, &height);
-    data.img_player = mlx_xpm_file_to_image(data.mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/black.xpm", &width, &height);
-
+    data.img_player = mlx_xpm_file_to_image(data.mlx, "/home/mlabrirh/Desktop/sprites/Ghosts/B/ghost_down1.xpm", &width, &height);
+	data.img_killer = mlx_xpm_file_to_image(data.mlx, "/home/mlabrirh/Desktop/sprites/Other/Pacdots/pacdot_powerup.xpm", &width, &height);
     if (!data.img_empty || !data.img_wall || !data.img_collectible || !data.img_exit || !data.img_player)
         error_exit("Failed to load images");
 	if (!validate_map(data.map, data.rows, data.cols))
@@ -382,7 +427,4 @@ int main(int argc, char **argv)
     mlx_key_hook(data.win, handle_keypress, &data);
     mlx_hook(data.win, 17, 0, (int (*)(void *))close_window, &data);
     mlx_loop(data.mlx);
-
-    return (0);
 }
-
