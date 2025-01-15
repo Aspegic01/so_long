@@ -16,7 +16,7 @@ void flood_fill(t_data *data, char **map_copy, int x, int y)
 {
 	if (x < 0 || y < 0 || x >= data->rows || y >= data->cols)
 		return;
-	if (map_copy[x][y] == '1' || map_copy[x][y] == '.')
+	if (map_copy[x][y] == '1' || map_copy[x][y] == '.' || map_copy[x][y] == 'T')
 		return;
 	map_copy[x][y] = '.';
 	flood_fill(data, map_copy, x + 1, y);

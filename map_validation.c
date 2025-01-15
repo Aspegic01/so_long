@@ -12,10 +12,10 @@
 
 #include "so_long.h"
 
-void count_collect(t_data *data)
+void	count_collect(t_data *data)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	data->collect = 0;
@@ -32,84 +32,96 @@ void count_collect(t_data *data)
 	}
 }
 
-int compare_first_rows_with_other(char **map, int rows, int cols)
+int	compare_first_rows_with_other(char **map, int rows, int cols)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < rows)
 	{
 		if (ft_strlen(map[i]) != cols)
-			return 1;
+			return (1);
 		i++;
 	}
-	return 0;
+	return (0);
 }
 
-int is_wall_consistent(char **map, int rows, int cols)
+int	is_wall_consistent(char **map, int rows, int cols)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (i < cols)
 	{
 		if (map[0][i] != '1' || map[rows - 1][i] != '1')
-			return 0;
+			return (0);
 		i++;
 	}
 	j = 0;
 	while (j < rows)
 	{
 		if (map[j][0] != '1' || map[j][cols - 1] != '1')
-			return 0;
+			return (0);
 		j++;
 	}
-	return 1;
+	return (1);
 }
 
-int validate_map(char *map[], int rows, int cols)
+void	count_elements(char *map[], int rows, int cols, int *counts)
 {
-	int exit_count = 0;
-	int collectible_count = 0;
-	int player_count = 0;
-	int killer = 0;
+	int	i;
+	int	j;
 
-	for (int i = 0; i < rows; i++)
+	i = 0;
+	while (i < rows)
 	{
-		for (int j = 0; j < cols; j++)
+		j = 0;
+		while (j < cols)
 		{
 			if (map[i][j] == 'E')
-				exit_count++;
+				counts[0]++;
 			if (map[i][j] == 'C')
-				collectible_count++;
+				counts[1]++;
 			if (map[i][j] == 'P')
-				player_count++;
+				counts[2]++;
 			if (map[i][j] == 'T')
-				killer++;
+				counts[3]++;
+			j++;
 		}
+		i++;
 	}
+}
 
-	if (exit_count != 1)
+int	validate_counts(int *counts)
+{
+	if (counts[0] != 1)
 	{
 		ft_putstr("Error: The map must contain exactly one exit.\n");
-		return 0;
+		return (0);
 	}
-	if (collectible_count < 1)
+	if (counts[1] < 1)
 	{
 		ft_putstr("Error: The map must contain at least one collectible.\n");
-		return 0;
+		return (0);
 	}
-	if (player_count != 1)
+	if (counts[2] != 1)
 	{
 		ft_putstr("Error: The map must contain exactly one player starting position.\n");
-		return 0;
+		return (0);
 	}
-	if (killer < 1)
+	if (counts[3] < 1)
 	{
 		ft_putstr("Error: The map must contain at least one killer.\n");
-		return 0;
+		return (0);
 	}
+	return (1);
+}
 
-	return 1;
+int	validate_map(char *map[], int rows, int cols)
+{
+	int counts[4] = {0, 0, 0, 0};
+
+	count_elements(map, rows, cols, counts);
+	return (validate_counts(counts));
 }

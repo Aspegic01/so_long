@@ -1,44 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   game.h                                             :+:      :+:    :+:   */
+/*   so_long.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlabrirh <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 21:58:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/01/01 21:58:07 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/01/15 19:47:47 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
-#define SO_LONG_H
+# define SO_LONG_H
 
 //#include "mlx.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include "get_next_line.h"
+# include <stdlib.h>
+# include <stdio.h>
+# include <fcntl.h>
+# include <unistd.h>
+# include "get_next_line.h"
 
-typedef struct	s_data
+typedef struct s_data
 {
-    void	*mlx;
-    void	*win;
-    void	*img_empty;
-    void	*img_wall;
-    void	*img_collectible;
-    void	*img_exit;
-    void	*img_player;
-    void	*img_killer;
-    int		player_x;
-    int		player_y;
-    char	**map;
-    int		rows;
-    int		cols;
-    int		collect;
+	void	*mlx;
+	void	*win;
+	void	*img_empty;
+	void	*img_wall;
+	void	*img_collectible;
+	void	*img_exit;
+	void	*img_player[3];
+	void	*img_killer[3];
+	int		player_x;
+	int		player_y;
+	char	**map;
+	int		rows;
+	int		cols;
+	int		collect;
+	int		player_frame;
+	int		killer_frame;
+	int		frame_count;
+	int		keypress;
 	int		count_move;
+	int		width;
+	int		height;
 }	t_data;
 
+int		keypress_handler(int keycode, t_data *data);
+int		game_loop(t_data *data);
 void	error_exit(const char *msg);
 void	ft_putstr(char *msg);
 char	*ft_itoa(int n);
@@ -50,6 +58,7 @@ int		validate_map(char *map[], int rows, int cols);
 void	rander_text(t_data*data);
 void	put_image(t_data *data, char tile, int x, int y);
 void	render_map(t_data *data);
+void	file_to_image(t_data *data);
 void	move_player(t_data *data, int new_x, int new_y);
 int		is_valid_move(t_data *data, int x, int y);
 void	process_interaction(t_data *data, int x, int y);
@@ -59,5 +68,7 @@ int		is_path_to_exit(t_data data, char **map);
 int		is_path_to_collect(t_data data, char **map);
 int		close_window(t_data *data);
 int		read_map(const char *file, t_data *data);
+int		animation_loop(t_data *data);	
+void render_player(t_data *data, int old_x, int old_y);
 
 #endif
