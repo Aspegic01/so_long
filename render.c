@@ -14,10 +14,11 @@
 #include "mlx.h"
 #include <string.h>
 
-void put_image(t_data *data, char tile, int x, int y)
+void	put_image(t_data *data, char tile, int x, int y)
 {
 	void	*img;
 	char	*count;
+
 	img = NULL;
 	if (tile == '0')
 		img = data->img_empty;
@@ -31,16 +32,22 @@ void put_image(t_data *data, char tile, int x, int y)
 		img = data->img_player[data->player_frame];
 	else if (tile == 'T')
 		img = data->img_killer[data->killer_frame];
-
 	if (img)
 	{
 		count = ft_itoa(data->count_move);
 		mlx_put_image_to_window(data->mlx, data->win, img, x * 32, y * 32);
 		mlx_string_put(data->mlx, data->win, 20, 20, 0xFFFFFF, "MOVE :");
-		mlx_string_put(data->mlx, data->win, 70, 20, 0xFFFFFF,count);
+		mlx_string_put(data->mlx, data->win, 70, 20, 0xFFFFFF, count);
 	}
+	free(count);
 }
-void render_map(t_data *data)
+
+void	render_tile(t_data *data, int x, int y)
+{
+	put_image(data, data->map[y][x], x, y);
+}
+
+void	render_map(t_data *data)
 {
 	int	y;
 	int	x;
@@ -51,9 +58,25 @@ void render_map(t_data *data)
 		x = 0;
 		while (x < data->cols)
 		{
-			put_image(data, data->map[y][x], x, y);
+			render_tile(data, x, y);
 			x++;
 		}
 		y++;
 	}
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	if (!s1 && !n)
+		return (0);
+	while (i < n && (s1[i] != 0 || s2[i] != 0))
+	{
+		if (s1[i] != s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	return (0);
 }

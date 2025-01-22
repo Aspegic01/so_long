@@ -6,7 +6,7 @@
 /*   By: mlabrirh <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 21:58:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/01/15 19:47:47 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/01/21 17:57:10 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,23 +41,31 @@ typedef struct s_data
 	int		frame_count;
 	int		keypress;
 	int		count_move;
+	int		count;
 	int		width;
 	int		height;
 }	t_data;
 
+void	free_file_to_image(t_data *data);
+void	render_tile(t_data *data, int x, int y);
 int		keypress_handler(int keycode, t_data *data);
 int		game_loop(t_data *data);
-void	error_exit(const char *msg);
+void	error_exit(const char *msg, t_data *data);
 void	ft_putstr(char *msg);
 char	*ft_itoa(int n);
 int		validate_extension(const char *file, const char *ext);
 void	count_collect(t_data *data);
 int		compare_first_rows_with_other(char **map, int rows, int cols);
+int		validate_counts(int *counts);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		is_wall_consistent(char **map, int rows, int cols);
 int		validate_map(char *map[], int rows, int cols);
 void	rander_text(t_data*data);
+void	render_updated_tiles(t_data *data, int *prev_frame);
+void	update_frames(t_data *data);
 void	put_image(t_data *data, char tile, int x, int y);
 void	render_map(t_data *data);
+void	count_elements(char *map[], int rows, int cols, int *counts);
 void	file_to_image(t_data *data);
 void	move_player(t_data *data, int new_x, int new_y);
 int		is_valid_move(t_data *data, int x, int y);
@@ -69,6 +77,13 @@ int		is_path_to_collect(t_data data, char **map);
 int		close_window(t_data *data);
 int		read_map(const char *file, t_data *data);
 int		animation_loop(t_data *data);	
-void render_player(t_data *data, int old_x, int old_y);
+void	render_player(t_data *data, int old_x, int old_y);
+void	free_data(t_data *data);
+void	animation_player_up(t_data *data);
+void	animation_player_down(t_data *data);
+void	animation_player_left(t_data *data);
+void	animation_player_right(t_data *data);
+void	animation_file(int keycode, t_data *data);
+void	free_previous_images(t_data	*data);
 
 #endif

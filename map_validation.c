@@ -97,7 +97,7 @@ int	validate_counts(int *counts)
 {
 	if (counts[0] != 1)
 	{
-		ft_putstr("Error: The map must contain exactly one exit.\n");
+		ft_putstr("The map must contain exactly one exit.\n");
 		return (0);
 	}
 	if (counts[1] < 1)
@@ -107,7 +107,7 @@ int	validate_counts(int *counts)
 	}
 	if (counts[2] != 1)
 	{
-		ft_putstr("Error: The map must contain exactly one player starting position.\n");
+		ft_putstr("Error: The map must contain exactly one player.\n");
 		return (0);
 	}
 	if (counts[3] < 1)
@@ -116,12 +116,4 @@ int	validate_counts(int *counts)
 		return (0);
 	}
 	return (1);
-}
-
-int	validate_map(char *map[], int rows, int cols)
-{
-	int counts[4] = {0, 0, 0, 0};
-
-	count_elements(map, rows, cols, counts);
-	return (validate_counts(counts));
 }

@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
-#include "mlx.h"
 
 void	move_player(t_data *data, int new_x, int new_y)
 {
@@ -59,96 +58,47 @@ void	process_interaction(t_data *data, int x, int y)
 	move_player(data, x, y);
 }
 
-void	animation_file(int keycode, t_data *data)
+void	handle_direction(int keycode, t_data *data, int *new_x, int *new_y)
 {
-	int	width;
-	int	height;
-
 	if (keycode == 119)
 	{
-		data->img_player[0] = mlx_xpm_file_to_image(data->mlx, "../sprites/Pac-Man/pac_closed.xpm", &width, &height); 
-		data->img_player[1] = mlx_xpm_file_to_image(data->mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_semi_up.xpm", &width, &height); 
-		data->img_player[2] = mlx_xpm_file_to_image(data->mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_open_up.xpm", &width, &height); 	
+		(*new_y)--;
+		animation_file(119, data);
 	}
 	else if (keycode == 115)
 	{
-
-		data->img_player[0] = mlx_xpm_file_to_image(data->mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_closed.xpm", &width, &height); 
-		data->img_player[1] = mlx_xpm_file_to_image(data->mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_semi_down.xpm", &width, &height); 
-		data->img_player[2] = mlx_xpm_file_to_image(data->mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_open_down.xpm", &width, &height); 
+		(*new_y)++;
+		animation_file(115, data);
 	}
 	else if (keycode == 97)
 	{
-
-		data->img_player[0] = mlx_xpm_file_to_image(data->mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_closed.xpm", &width, &height); 
-		data->img_player[1] = mlx_xpm_file_to_image(data->mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_semi_left.xpm", &width, &height); 
-		data->img_player[2] = mlx_xpm_file_to_image(data->mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_open_left.xpm", &width, &height); 		
+		(*new_x)--;
+		animation_file(97, data);
 	}
 	else if (keycode == 100)
 	{
-
-		data->img_player[0] = mlx_xpm_file_to_image(data->mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_closed.xpm", &width, &height); 
-		data->img_player[1] = mlx_xpm_file_to_image(data->mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_semi_right.xpm", &width, &height); 
-		data->img_player[2] = mlx_xpm_file_to_image(data->mlx, "/home/mlabrirh/Desktop/sprites/Pac-Man/pac_open_right.xpm", &width, &height); 
+		(*new_x)++;
+		animation_file(100, data);
 	}
 }
 
-int handle_keypress(int keycode, t_data *data)
+int	handle_keypress(int keycode, t_data *data)
 {
-	int new_x;
+	int	new_x;
 	int	new_y;
-	int	width;
-	int	height;
 
 	new_x = data->player_x;
 	new_y = data->player_y;
 	if (keycode == 65307)
 		close_window(data);
-	else if (keycode == 119)
+	else
 	{
-	new_y--;
-	animation_file(119, data);
-}
-	else if (keycode == 115)
-	{
-		new_y++;
-		animation_file(115, data);
+		handle_direction(keycode, data, &new_x, &new_y);
+		if (is_valid_move(data, new_x, new_y))
+		{
+			process_interaction(data, new_x, new_y);
+			render_map(data);
+		}
 	}
-	else if (keycode == 97)
-	{
-		new_x--;
-		animation_file(97, data);
-	}
-	else if (keycode == 100)
-	{
-		new_x++;
-		animation_file(100, data);
-	}
-	if (is_valid_move(data, new_x, new_y))
-	{
-		int old_x = data->player_x;
-		int	old_y = data->player_y;
-		process_interaction(data, new_x, new_y);
-		render_map(data);
-	}
-	return (0);
-}
-int	animation_loop(t_data *data)
-{
-	data->frame_count++;
-
-	if (data->frame_count >= 30)
-	{
-		data->player_frame = (data->player_frame + 1) % 3;
-		data->killer_frame = (data->killer_frame + 1) % 3;
-		data->frame_count = 0;
-	}
-	render_map(data);
-	return 0;
-}
-
-int keypress_handler(int keycode, t_data *data)
-{
-	data->keypress = keycode;
 	return (0);
 }
