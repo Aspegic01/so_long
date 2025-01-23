@@ -65,7 +65,15 @@ int	keypress_handler(int keycode, t_data *data)
 
 void	error_exit(const char *msg, t_data *data)
 {
-	close_window(data);
+	int	i;
+
+	i = 0;
+	while (i < data->rows)
+	{
+		free(data->map[i]);
+		i++;
+	}
+	free(data->map);
 	perror(msg);
 	exit(EXIT_FAILURE);
 }

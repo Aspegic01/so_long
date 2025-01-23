@@ -44,7 +44,7 @@ int	close_window(t_data *data)
 void	update_map(t_data *data, char *line)
 {
 	char	**new_map;
-	size_t	i;
+	int		i;
 
 	new_map = malloc(sizeof(char *) * (data->rows + 1));
 	if (!new_map)
@@ -67,7 +67,7 @@ int	read_map(const char *file, t_data *data)
 	char	*line;
 
 	if (!validate_extension(file, ".ber"))
-		error_exit("Invalid file extension. Only '.ber' files are allowed.", data);
+		error_exit("Only '.ber' files are allowed.", data);
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
 		error_exit("Error opening map file", data);
@@ -94,13 +94,14 @@ void	mlx_function(t_data data)
 	if (!data.mlx)
 		error_exit("Failed to initialize MLX", &data);
 	data.win = mlx_new_window(data.mlx,
-			data.cols * 32, data.rows * 32, "Simple Map");
+			data.cols * 32, data.rows * 36, "Simple Map");
 	if (!data.win)
 		error_exit("Failed to create window", &data);
 	file_to_image(&data);
+	file_holder(&data);
 	render_map(&data);
 	mlx_key_hook(data.win, handle_keypress, &data);
-	mlx_loop_hook(data.win, keypress_handler, &data);
+	mlx_hook(data.win, 2, 1L << 0, keypress_handler, &data);
 	mlx_hook(data.win, 17, 0, (int (*)(void *))close_window, &data);
 	mlx_loop_hook(data.mlx, animation_loop, &data);
 	mlx_loop(data.mlx);

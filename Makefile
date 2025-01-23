@@ -12,26 +12,31 @@
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-NAME = so.a
-
+NAME = so_long.a
+FLAGS = -lmlx -lX11 -lXext -lm
+NAME_PROGRAMME = so_long
 SRCS = main.c render.c map_validation.c player.c utils.c utils1.c utils2.c get_next_line.c get_next_line_utils.c ft_itoa.c animation_player.c utils3.c
-OFILES =	$(SRCS:.c=.o)
+OFILES = $(SRCS:.c=.o)
+
+all: $(NAME_PROGRAMME)
 
 $(NAME): $(OFILES)
+	ar rcs $(NAME) $(OFILES)
 
-all: $(NAME)
-
-%.o: %.c 
-	$(CC) -c $(FLAGS) $< -o $@
-	ar rcs $(NAME) $@
-
-clean:
-	rm -rf  $(OFILES) 
-
-fclean:	clean
+$(NAME_PROGRAMME): $(NAME)
+	$(CC) -o $(NAME_PROGRAMME) $(NAME) $(FLAGS)
 	rm -rf $(NAME)
 
-re:	fclean all
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-.PHONY:	clean
-.SECONDARY: $(OFILES)
+clean:
+	rm -rf $(OFILES)
+
+fclean: clean
+	rm -rf $(NAME) $(NAME_PROGRAMME)
+
+re: fclean all
+
+.PHONY: clean fclean re
+.SECONDARY: $(OFILES) $(NAME)

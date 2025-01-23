@@ -17,7 +17,6 @@
 void	put_image(t_data *data, char tile, int x, int y)
 {
 	void	*img;
-	char	*count;
 
 	img = NULL;
 	if (tile == '0')
@@ -33,18 +32,33 @@ void	put_image(t_data *data, char tile, int x, int y)
 	else if (tile == 'T')
 		img = data->img_killer[data->killer_frame];
 	if (img)
-	{
-		count = ft_itoa(data->count_move);
 		mlx_put_image_to_window(data->mlx, data->win, img, x * 32, y * 32);
-		mlx_string_put(data->mlx, data->win, 20, 20, 0xFFFFFF, "MOVE :");
-		mlx_string_put(data->mlx, data->win, 70, 20, 0xFFFFFF, count);
-	}
-	free(count);
 }
 
 void	render_tile(t_data *data, int x, int y)
 {
 	put_image(data, data->map[y][x], x, y);
+}
+
+void	free_digit_image(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < 10)
+	{
+		if (data->digit[i])
+		{
+			mlx_destroy_image(data->mlx, data->digit[i]);
+			data->digit[i] = NULL;
+		}
+		i++;
+	}
+}
+
+void	render_move_count(t_data *data)
+{
+	render_digit(data, (data->cols / 2) * 32, data->rows * 33);
 }
 
 void	render_map(t_data *data)
@@ -59,24 +73,9 @@ void	render_map(t_data *data)
 		while (x < data->cols)
 		{
 			render_tile(data, x, y);
+			render_move_count(data);
 			x++;
 		}
 		y++;
 	}
-}
-
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	if (!s1 && !n)
-		return (0);
-	while (i < n && (s1[i] != 0 || s2[i] != 0))
-	{
-		if (s1[i] != s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		i++;
-	}
-	return (0);
 }

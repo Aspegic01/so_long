@@ -36,6 +36,7 @@ typedef struct s_data
 	int		rows;
 	int		cols;
 	int		collect;
+	void	*digit[10];
 	int		player_frame;
 	int		killer_frame;
 	int		frame_count;
@@ -47,6 +48,8 @@ typedef struct s_data
 }	t_data;
 
 void	free_file_to_image(t_data *data);
+void	render_digit(t_data *data, int x, int y);
+void	file_holder(t_data *data);
 void	render_tile(t_data *data, int x, int y);
 int		keypress_handler(int keycode, t_data *data);
 int		game_loop(t_data *data);
@@ -55,6 +58,7 @@ void	ft_putstr(char *msg);
 char	*ft_itoa(int n);
 int		validate_extension(const char *file, const char *ext);
 void	count_collect(t_data *data);
+void	free_digit_image(t_data *data);
 int		compare_first_rows_with_other(char **map, int rows, int cols);
 int		validate_counts(int *counts);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);

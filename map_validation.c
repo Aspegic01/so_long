@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
+#include <stddef.h>
 
 void	count_collect(t_data *data)
 {
@@ -39,7 +40,7 @@ int	compare_first_rows_with_other(char **map, int rows, int cols)
 	i = 0;
 	while (i < rows)
 	{
-		if (ft_strlen(map[i]) != cols)
+		if (ft_strlen(map[i]) != (size_t)cols)
 			return (1);
 		i++;
 	}

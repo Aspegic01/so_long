@@ -19,11 +19,11 @@ void	animation_player_up(t_data *data)
 	int	height;
 
 	data->img_player[0] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_closed.xpm", &width, &height);
+	"./sprites//Pac-Man/pac_closed.xpm", &width, &height);
 	data->img_player[1] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_semi_up.xpm", &width, &height);
+	"./sprites/Pac-Man/pac_semi_up.xpm", &width, &height);
 	data->img_player[2] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_open_up.xpm", &width, &height);
+	"./sprites/Pac-Man/pac_open_up.xpm", &width, &height);
 }
 
 void	animation_player_down(t_data *data)
@@ -32,11 +32,11 @@ void	animation_player_down(t_data *data)
 	int	height;
 
 	data->img_player[0] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_closed.xpm", &width, &height);
+	"./sprites/Pac-Man/pac_closed.xpm", &width, &height);
 	data->img_player[1] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_semi_down.xpm", &width, &height);
+	"./sprites/Pac-Man/pac_semi_down.xpm", &width, &height);
 	data->img_player[2] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_open_down.xpm", &width, &height);
+	"./sprites/Pac-Man/pac_open_down.xpm", &width, &height);
 }
 
 void	animation_player_left(t_data *data)
@@ -45,11 +45,11 @@ void	animation_player_left(t_data *data)
 	int	height;
 
 	data->img_player[0] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_closed.xpm", &width, &height);
+	"./sprites/Pac-Man/pac_closed.xpm", &width, &height);
 	data->img_player[1] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_semi_left.xpm", &width, &height);
+	"./sprites/Pac-Man/pac_semi_left.xpm", &width, &height);
 	data->img_player[2] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_open_left.xpm", &width, &height);
+	"./sprites/Pac-Man/pac_open_left.xpm", &width, &height);
 }
 
 void	animation_player_right(t_data *data)
@@ -58,11 +58,11 @@ void	animation_player_right(t_data *data)
 	int	height;
 
 	data->img_player[0] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_closed.xpm", &width, &height);
+	"./sprites/Pac-Man/pac_closed.xpm", &width, &height);
 	data->img_player[1] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_semi_right.xpm", &width, &height);
+	"./sprites/Pac-Man/pac_semi_right.xpm", &width, &height);
 	data->img_player[2] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_open_right.xpm", &width, &height);
+	"./sprites/Pac-Man/pac_open_right.xpm", &width, &height);
 }
 
 void	animation_file(int keycode, t_data *data)

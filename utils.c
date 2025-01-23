@@ -45,6 +45,7 @@ void	free_file_to_image(t_data *data)
 		}
 		i++;
 	}
+	free_digit_image(data);
 	if (data->img_empty)
 		mlx_destroy_image(data->mlx, data->img_empty);
 	if (data->img_wall)
@@ -58,21 +59,21 @@ void	free_file_to_image(t_data *data)
 void	file_player_and_killer(t_data *data)
 {
 	data->img_killer[0] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Ghosts/B/ghost_right1.xpm", &data->width, &data->height);
+	"./sprites/Ghosts/B/ghost_right1.xpm", &data->width, &data->height);
 	data->img_killer[1] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Ghosts/B/ghost_down1.xpm", &data->width, &data->height);
+	"./sprites/Ghosts/B/ghost_down1.xpm", &data->width, &data->height);
 	data->img_killer[2] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Ghosts/B/ghost_left2.xpm", &data->width, &data->height);
+	"./sprites/Ghosts/B/ghost_left2.xpm", &data->width, &data->height);
 	data->img_player[0] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_closed.xpm", &data->width, &data->height);
+	"./sprites/Pac-Man/pac_closed.xpm", &data->width, &data->height);
 	data->img_player[1] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_semi_left.xpm", &data->width, &data->height);
+	"./sprites/Pac-Man/pac_semi_left.xpm", &data->width, &data->height);
 	data->img_player[2] = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Pac-Man/pac_open_left.xpm", &data->width, &data->height);
+	"./sprites/Pac-Man/pac_open_left.xpm", &data->width, &data->height);
 	if (!data->img_player[0] || !data->img_player[1] || !data->img_player[2] || \
 		!data->img_killer[0] || !data->img_killer[1] || !data->img_killer[2])
 	{
-		free_file_to_image(data);
+		close_window(data);
 		error_exit("Failed to load images", data);
 	}
 	data->player_frame = 0;
@@ -83,18 +84,18 @@ void	file_player_and_killer(t_data *data)
 void	file_to_image(t_data *data)
 {
 	data->img_empty = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Other/Walls/black.xpm", &data->width, &data->height);
+	"./sprites/Other/Walls/black.xpm", &data->width, &data->height);
 	data->img_wall = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Other/Walls/wall.xpm", &data->width, &data->height);
+	"./sprites/Other/Walls/wall.xpm", &data->width, &data->height);
 	data->img_collectible = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Other/Pacdots/pacdot_powerup.xpm", &data->width, &data->height);
+	"./sprites/Other/Pacdots/pacdot_powerup.xpm", &data->width, &data->height);
 	data->img_exit = mlx_xpm_file_to_image(data->mlx, \
-	"../sprites/Other/Portal/portal.xpm", &data->width, &data->height);
+	"./sprites/Other/Portal/portal.xpm", &data->width, &data->height);
 	file_player_and_killer(data);
 	if (!data->img_empty || !data->img_wall || \
 		!data->img_collectible || !data->img_exit)
 	{
-		free_file_to_image(data);
+		close_window(data);
 		error_exit("Failed to load images", data);
 	}
 }
