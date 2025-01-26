@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
-#include "mlx.h"
-#include <string.h>
 
 void	put_image(t_data *data, char tile, int x, int y)
 {
@@ -58,7 +56,7 @@ void	free_digit_image(t_data *data)
 
 void	render_move_count(t_data *data)
 {
-	render_digit(data, (data->cols / 2) * 32, data->rows * 33);
+	render_digit(data, (data->cols / 2) * 33, 6);
 }
 
 void	render_map(t_data *data)

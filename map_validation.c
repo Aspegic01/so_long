@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
-#include <stddef.h>
 
 void	count_collect(t_data *data)
 {

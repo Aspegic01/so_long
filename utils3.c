@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
-#include <mlx.h>
 
 void	ft_putstr(char *msg)
 {
@@ -84,7 +83,7 @@ void	render_digit(t_data *data, int x, int y)
 	while (buffer[i])
 	{
 		digit = buffer[i] - '0';
-		put_digit(data, digit, x + (i * 15), y);
+		put_digit(data, digit, x + (i * 32), y);
 		i++;
 	}
 	free(buffer);

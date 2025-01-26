@@ -10,10 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
 #include "so_long.h"
-#include <mlx.h>
-#include <unistd.h>
 
 int	close_window(t_data *data)
 {
@@ -94,7 +91,7 @@ void	mlx_function(t_data data)
 	if (!data.mlx)
 		error_exit("Failed to initialize MLX", &data);
 	data.win = mlx_new_window(data.mlx,
-			data.cols * 32, data.rows * 36, "Simple Map");
+			data.cols * 32, data.rows * 32, "Simple Map");
 	if (!data.win)
 		error_exit("Failed to create window", &data);
 	file_to_image(&data);

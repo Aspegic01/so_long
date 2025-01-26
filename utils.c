@@ -10,14 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "mlx.h"
-#include <string.h>
 #include "so_long.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include "get_next_line.h"
 
 int	validate_extension(const char *file, const char *ext)
 {

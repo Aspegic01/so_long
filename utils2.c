@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
-#include <mlx.h>
 
 int	validate_map(char *map[], int rows, int cols)
 {
